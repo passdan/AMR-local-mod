@@ -1,6 +1,6 @@
 Overview
 --------
-This repository is a modified version of the (AMR++ core repository)[https://github.com/Microbial-Ecology-Group/AMRplusplus] with some notable modifications, changes, and parameterised for running on Cardiff University Biosciences compute cluster (Trinity). For usage and tutorials refer to the core AMR++ documentation.
+This repository is a modified version of the [AMR++ core repository](https://github.com/Microbial-Ecology-Group/AMRplusplus) with some notable modifications, changes, and parameterised for running on Cardiff University Biosciences compute cluster (Trinity). For usage and tutorials refer to the core AMR++ documentation.
 
 Notable changes to original pipeline:
 - Integrated fastp & bowtie2 as QC and alignment packages
