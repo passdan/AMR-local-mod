@@ -1,5 +1,6 @@
 // Load modules
-include { index ; bwa_align } from '../modules/Alignment/bwa'
+//include { index ; bwa_align } from '../modules/Alignment/bwa'
+include { bowtie2_index ; bowtie2_align } from '../modules/Alignment/bowtie2-amr-mod'
 
 // resistome
 include {plotrarefaction ; runresistome ; runsnp ; resistomeresults ; runrarefaction ; build_dependencies ; snpresults} from '../modules/Resistome/resistome'
@@ -30,8 +31,8 @@ workflow FASTQ_RESISTOME_WF {
         }
         // Define amr_index_files variable
         if (params.amr_index == null) {
-            index(amr)
-            amr_index_files = index.out
+            bowtie2_index(amr)
+            amr_index_files = bowtie2_index.out
         } else {
             amr_index_files = Channel
                 .fromPath(Paths.get(params.amr_index))
@@ -47,20 +48,20 @@ workflow FASTQ_RESISTOME_WF {
                 }
          }        
         // AMR alignment
-        bwa_align(amr_index_files, read_pairs_ch )
+        bowtie2_align(amr_index_files, read_pairs_ch )
         // Split sections below for standard and dedup_ed results
-        runresistome(bwa_align.out.bwa_bam,amr, annotation, resistomeanalyzer )
+        runresistome(bowtie2_align.out.bowtie2_bam,amr, annotation, resistomeanalyzer )
         resistomeresults(runresistome.out.resistome_counts.collect())
-        runrarefaction(bwa_align.out.bwa_bam, annotation, amr, rarefactionanalyzer)
+        runrarefaction(bowtie2_align.out.bowtie2_bam, annotation, amr, rarefactionanalyzer)
         plotrarefaction(runrarefaction.out.rarefaction.collect())
         // Add SNP confirmation
         if (params.snp == "Y") {
-            runsnp(bwa_align.out.bwa_bam, resistomeresults.out.snp_count_matrix)
+            runsnp(bowtie2_align.out.bowtie2_bam, resistomeresults.out.snp_count_matrix)
             snpresults(runsnp.out.snp_counts.collect() )
         }
         // Add analysis of deduped counts
         if (params.deduped == "Y"){
-            BAM_DEDUP_RESISTOME_WF(bwa_align.out.bwa_dedup_bam,amr, annotation)
+            BAM_DEDUP_RESISTOME_WF(bowtie2_align.out.bowtie2_dedup_bam,amr, annotation)
         }
 }
 

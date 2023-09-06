@@ -17,8 +17,8 @@ workflow FASTQ_KRAKEN_WF {
         } else {
             kraken_db_ch = Channel.fromPath(params.kraken_db)
         }
-        
-        runkraken(read_pairs_ch, kraken_db_ch)
+	
+        runkraken(read_pairs_ch, krakendb)
         krakenresults(runkraken.out.kraken_report.collect())
         
 }

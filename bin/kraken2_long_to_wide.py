@@ -82,7 +82,7 @@ def kraken2_load_analytic_data(file_name_list):
                 if node_level == 'U':
                     unclassifieds[sample_id][0] = node_count
                     unclassifieds[sample_id][1] += node_count
-                    unclassifieds[sample_id][2] = float(entries[0])
+                    unclassifieds[sample_id][2] = np.float(entries[0])
                     continue
                 elif node_level == 'R':
                     unclassifieds[sample_id][1] += int(entries[1])
