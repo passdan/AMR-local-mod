@@ -2,8 +2,8 @@
 #SBATCH --partition=epyc_ssd       # the requested queue
 #SBATCH --nodes=1              # number of nodes to use
 #SBATCH --tasks-per-node=1
-#SBATCH --cpus-per-task=2      #
-#SBATCH --mem=4000	     # in megabytes, unless unit explicitly stated
+#SBATCH --cpus-per-task=4      #
+#SBATCH --mem=8000	     # in megabytes, unless unit explicitly stated
 #SBATCH --error=logs/%J.err         # redirect stderr to this file
 #SBATCH --output=logs/%J.out        # redirect stdout to this file
 ##SBATCH --mail-user=passD1@Cardiff.ac.uk  # email address used for event notification
@@ -29,17 +29,35 @@ export NXF_OPTS="-Xms500M -Xmx2G"
 
 workdir="/tmp"
 datadir="/mnt/scratch2/GROUP-smbpk"
-installdir="/trinity/home/sbidp3/data/AMRplusplus/"
-run="AMR_June2023"
+installdir="/mnt/data/GROUP-smbpk/sbidp3/AMRplusplus"
+resultsdir="/trinity/home/sbidp3/data/AMRplus-all-out"
+run="AMR_Feb2023"
 
-nextflow run main_AMR++.nf \
+#mkdir ${workdir}/${run}/ 
+#mkdir ${workdir}/${run}/fastq/ 
+#rsync -rv sbidp3@archive.bios.cf.ac.uk:/mnt/archive/GROUP-smbpk/PROJECTS-DATASTORE/AMR/AMR_monitoring/raw_data/${run}/*gz ${workdir}/${run}/fastq/
+
+nextflow run ${installdir}/main_AMR++.nf \
 	-w "${workdir}/${run}/work" \
 	-c "${installdir}/config/singularity_slurm.config" \
-	--reads "${datadir}/${run}/fastq/*{1,2}.fastq.gz" \
-	--bam_files "${datadir}/${run}/AMRplusplus-out-${run}-repeat/Alignment/BAM_files/Standard/*bam" \
-	--pipeline bam_resistome \
-	--output "${workdir}/${run}/AMRplusplus-kraken-${run}" \
-	-with-report "${datadir}/${run}/${run}.html" \
-	-with-trace "${installdir}/logs/${SLURM_JOB_ID}.trace.txt" \
+	--reads "${workdir}/${run}/fastq/*{R1,R2}.fastq.gz" \
+	--pipeline standard_AMR_wKraken \
+	--output "${workdir}/${run}/${run}-outputs" \
 	--snp Y \
-	-resume 
+	-with-report "${workdir}/${run}/${run}.html" \
+	-with-trace "${installdir}/logs/${SLURM_JOB_ID}.trace.txt" \
+        -resume	
+
+module load multiqc/1.9
+multiqc -o ${workdir}/${run}/${run}-outputs/Results/ ${workdir}/${run}/${run}-outputs
+
+####
+# Results copyout
+####
+mkdir ${resultsdir}/${run}
+#rsync -r ${workdir}/${run}/${run}-outputs/HostRemoval/NonHostFastq $resultsdir/$run/
+rsync -r ${workdir}/${run}/${run}-outputs/Results $resultsdir/$run/
+rsync ${workdir}/${run}/${run}.html $resultsdir/$run/
+
+## Delete all
+#rm -rf ${workdir}/${run}

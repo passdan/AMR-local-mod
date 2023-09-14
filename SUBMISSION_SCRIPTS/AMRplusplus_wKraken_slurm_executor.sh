@@ -32,7 +32,7 @@ datadir="/mnt/scratch2/GROUP-smbpk"
 installdir="/trinity/home/sbidp3/data/AMRplusplus/"
 run="AMR_May2023"
 
-nextflow run main_AMR++.nf \
+nextflow run ${installdir}/main_AMR++.nf \
 	-w "${workdir}/${run}/work" \
 	-c "${installdir}/config/singularity_slurm.config" \
 	--reads "${datadir}/${run}/AMRplusplus-out/HostRemoval/NonHostFastq/*{R1,R2}.fastq.gz" \

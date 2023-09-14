@@ -129,7 +129,7 @@ process bowtie2_rm_contaminant_fq {
 
 process HostRemovalStats {
     tag { sample_id }
-    label "alignment"
+    label "normal"
 
     errorStrategy { task.exitStatus in 137..140 ? 'retry' : 'terminate' }
     maxRetries 3 
