@@ -13,12 +13,14 @@ Codebase is provided as-is and is hyper-locally modified for our infrastructure.
 
 # Running the pipeline
 
-## Build singularity containers before running, and update the config file (config/singularity_slurm.config) with the locations on your system
+## Build singularity containers before running
 Singularity containers can be pulled directly from dockerhub:
 ```
 singularity build amrplusplus-update.sif docker://passdan/amrplusplus-update
 singularity build bowtie_latest.sif docker://nanozoo/bowtie2:latest
 ```
+Once completed, update the config file (```config/singularity_slurm.config```) with the locations on your system.
+
 
 ## Download bowtie2 index files 
 Either download directly,  or build your host indexes to be filtered against (here, removing all human genome matching short reads from the data)
