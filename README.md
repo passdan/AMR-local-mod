@@ -21,6 +21,11 @@ singularity build bowtie_latest.sif docker://nanozoo/bowtie2:latest
 ```
 Once completed, update the config file (```config/singularity_slurm.config```) with the locations on your system.
 
+(Alternatively, docker/singularity images can be built using the container definitions in ```/envs/Containers/``` with:
+
+```
+sudo docker build . -t passdan/amrplusplus-update
+```
 
 ## Download bowtie2 index files 
 Either download directly,  or build your host indexes to be filtered against (here, removing all human genome matching short reads from the data)
