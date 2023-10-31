@@ -53,12 +53,12 @@ def dict_to_matrix(D):
             if taxon not in unique_nodes:
                 unique_nodes.append(taxon)
     nrow = len(unique_nodes)
-    return_values = np.zeros((nrow, ncol), dtype=np.float)
+    return_values = np.zeros((nrow, ncol), dtype=np.float64)
     for j, (sample, tdict) in enumerate(D.items()):
         samples.append(sample)
         for i, taxon in enumerate(unique_nodes):
             if taxon in tdict:
-                return_values[i, j] = np.float(tdict[taxon])
+                return_values[i, j] = np.float64(tdict[taxon])
     return return_values, unique_nodes, samples
 
 
@@ -82,7 +82,7 @@ def kraken2_load_analytic_data(file_name_list):
                 if node_level == 'U':
                     unclassifieds[sample_id][0] = node_count
                     unclassifieds[sample_id][1] += node_count
-                    unclassifieds[sample_id][2] = np.float(entries[0])
+                    unclassifieds[sample_id][2] = np.float64(entries[0])
                     continue
                 elif node_level == 'R':
                     unclassifieds[sample_id][1] += int(entries[1])

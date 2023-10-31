@@ -28,7 +28,7 @@ From: debian:jessie-slim
     conda config --add channels bioconda
 
     # install bulk of bioinformatic tools using conda
-    conda create -n AmrPlusPlus_env python=3.9 trimmomatic=0.39 bwa samtools=1.15.1 bedtools kraken=2.1.2 biopython matplotlib=3.5.3 numpy=1.23.1 pysam=0.19.1 pandas=1.4.3 fastqc=0.11.8 multiqc fastp
+    conda create -n AmrPlusPlus_env python=3.9 trimmomatic=0.39 bwa samtools=1.15.1 bedtools kraken=2.1.2 biopython matplotlib=3.5.3 numpy=1.23.1 pysam=0.19.1 pandas=1.4.3 fastqc=0.11.8 multiqc fastp bracken=2.7
 
     /usr/local/bin/activate AmrPlusPlus_env
     

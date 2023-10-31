@@ -76,6 +76,7 @@ params.pipeline = null
 include { STANDARD_AMRplusplus } from './subworkflows/AMR++_standard.nf' 
 include { FAST_AMRplusplus } from './subworkflows/AMR++_fast.nf'
 include { STANDARD_AMRplusplus_wKraken } from './subworkflows/AMR++_standard_wKraken.nf'
+include { STANDARD_AMRplusplus_wKrak_and_Brack } from './subworkflows/AMR++_standard_wKrak_and_Brack.nf'
 
 // Load subworkflows
 include { FASTQ_QC_WF } from './subworkflows/fastq_information.nf'
@@ -84,12 +85,18 @@ include { FASTQ_ALIGN_WF } from './subworkflows/fastq_align.nf'
 include { FASTQ_RM_HOST_WF } from './subworkflows/fastq_host_removal.nf' 
 include { FASTQ_RESISTOME_WF } from './subworkflows/fastq_resistome.nf'
 include { FASTQ_KRAKEN_WF } from './subworkflows/fastq_microbiome.nf'
+include { FASTQ_KRAKEN_AND_BRACKEN_WF } from './subworkflows/fastq_microbiome_wBracken.nf'
+include { BRACKEN_ONLY } from './subworkflows/bracken_only.nf'
 include { FASTQ_QIIME2_WF } from './subworkflows/fastq_16S_qiime2.nf'
 
 // Load BAM subworkflows
 include { BAM_RESISTOME_WF } from './subworkflows/bam_resistome.nf'
 
 
+taxlevel_ch = Channel.of("D","P","C","O","F","G","S")
+//taxlevel_ch = Channel.from(params.taxlevel.tokenize(','))
+
+taxlevel_ch.view()
 
 workflow {
     if (params.pipeline == null || params.pipeline == "help") {
@@ -151,6 +158,14 @@ workflow {
     else if(params.pipeline == "kraken") {
 
         FASTQ_KRAKEN_WF( fastq_files , params.kraken_db)
+    }
+    else if(params.pipeline == "standard_AMR_wKraken_and_bracken") {
+
+         STANDARD_AMRplusplus_wKrak_and_Brack(fastq_files,params.host, params.amr, params.annotation, params.kraken_db, taxlevel_ch)
+    }
+    else if(params.pipeline == "kraken_and_bracken") {
+
+         FASTQ_KRAKEN_AND_BRACKEN_WF(fastq_files, params.kraken_db, taxlevel_ch)
     }
     else if(params.pipeline == "qiime2") {
         Channel
