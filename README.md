@@ -7,7 +7,8 @@ Notable changes to original pipeline:
 - Based upon modified docker image (passdan/amrplusplus-update)
 - Some code tweaks and fixes to work with singularity-slurm submission and repair nextflow channel bugs 
 - Bespoke job submission and result caputre to fit our specific requirements
-- (Pending) Completed Bracken implementation
+- Completed Bracken implementation
+  - Note: Two new workflow parameters: 'standard_AMR_wKraken_and_bracken' and 'kraken_and_braken' (for already filtered/host removed input)
 
 Codebase is provided as-is and is hyper-locally modified for our infrastructure. If you are not concerned about fastp & bowtie2 you probably want to work from the original AMR++ repository. 
 
