@@ -28,10 +28,9 @@ module load singularity/3.8.7
 export NXF_OPTS="-Xms500M -Xmx2G"
 
 workdir="/tmp"
-datadir="/mnt/scratch2/GROUP-smbpk"
 installdir="/mnt/data/GROUP-smbpk/sbidp3/AMRplusplus"
 resultsdir="/trinity/home/sbidp3/data/AMRplus-all-out"
-run="AMR_Feb2023"
+run="AMR_Jun2023"
 
 #mkdir ${workdir}/${run}/ 
 #mkdir ${workdir}/${run}/fastq/ 
@@ -41,7 +40,7 @@ nextflow run ${installdir}/main_AMR++.nf \
 	-w "${workdir}/${run}/work" \
 	-c "${installdir}/config/singularity_slurm.config" \
 	--reads "${workdir}/${run}/fastq/*{R1,R2}.fastq.gz" \
-	--pipeline standard_AMR_wKraken \
+	--pipeline standard_AMR_wKraken_and_bracken \
 	--output "${workdir}/${run}/${run}-outputs" \
 	--snp Y \
 	-with-report "${workdir}/${run}/${run}.html" \

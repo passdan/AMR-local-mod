@@ -1,5 +1,5 @@
 // Load modules
-include { runkraken ; krakenresults ; dlkraken} from '../modules/Microbiome/kraken2.nf' 
+include { runkraken ; krakenresults ; dlkraken} from '../modules/Microbiome/kraken_and_bracken.nf' 
 
 workflow FASTQ_KRAKEN_WF {
     take: 

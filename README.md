@@ -4,6 +4,7 @@ This repository is a modified version of the [AMR++ core repository](https://git
 
 Notable changes to original pipeline:
 - Integrated fastp & bowtie2 as QC and alignment packages
+  - Note: bowtie2 alignment against megaresDB has significant change on alignment rate.
 - Based upon modified docker image (passdan/amrplusplus-update)
 - Some code tweaks and fixes to work with singularity-slurm submission and repair nextflow channel bugs 
 - Bespoke job submission and result caputre to fit our specific requirements
@@ -13,6 +14,26 @@ Notable changes to original pipeline:
 Codebase is provided as-is and is hyper-locally modified for our infrastructure. If you are not concerned about fastp & bowtie2 you probably want to work from the original AMR++ repository. 
 
 # Running the pipeline
+
+    Available pipelines:
+        - demo: Run a demonstration of AMR++
+        - standard_AMR: Run the standard AMR++ pipeline
+        - fast_AMR: Run the fast AMR++ pipeline without host removal.
+        - standard_AMR_wKraken: Run the standard AMR++ pipeline with Kraken
+**NEW** - standard_AMR_wKraken_and_bracken: Run the standard AMR++ pipeline with Kraken AND Bracken
+
+    Available subworkflows:
+        - eval_qc: Run FastQC analysis
+        - trim_qc: Run trimming and quality control
+        - rm_host: Remove host reads
+        - resistome: Perform resistome analysis
+        - align: Perform alignment to MEGARes database
+        - kraken: Perform Kraken analysis
+**NEW** - kraken_and_bracken: Perform Kraken and Bracken analysis
+        - qiime2: Perform QIIME 2 analysis
+        - bam_resistome: Perform resistome analysis on BAM files
+
+
 
 ## Build singularity containers before running
 Singularity containers can be pulled directly from dockerhub:
@@ -46,7 +67,7 @@ Put the raw data somewhere on your system. The default slurm scripts are designe
 ```$workdir/$run/fastq```
 
 ## Run the process
-Default pipeline is ```standard_AMR_wKraken``` which will run from raw fastqs to the endpoint. 
+Default pipeline is ```standard_AMR_wKraken_and_bracken``` which will run from raw fastqs to the endpoint. 
 
 Alternatives are to use mid-process data, kraken only etc. by modifying the --pipeline parameter
 ```

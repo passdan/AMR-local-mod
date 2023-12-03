@@ -26,6 +26,8 @@ def helpMessage = """\
         - standard_AMR: Run the standard AMR++ pipeline
         - fast_AMR: Run the fast AMR++ pipeline without host removal.
         - standard_AMR_wKraken: Run the standard AMR++ pipeline with Kraken
+        - standard_AMR_wKraken_and_bracken: Run the standard AMR++ pipeline with Kraken AND Bracken
+
     Available subworkflows:
         - eval_qc: Run FastQC analysis
         - trim_qc: Run trimming and quality control
@@ -33,6 +35,7 @@ def helpMessage = """\
         - resistome: Perform resistome analysis
         - align: Perform alignment to MEGARes database
         - kraken: Perform Kraken analysis
+        - kraken_and_bracken: Perform Kraken and Bracken analysis
         - qiime2: Perform QIIME 2 analysis
         - bam_resistome: Perform resistome analysis on BAM files
 
@@ -86,7 +89,6 @@ include { FASTQ_RM_HOST_WF } from './subworkflows/fastq_host_removal.nf'
 include { FASTQ_RESISTOME_WF } from './subworkflows/fastq_resistome.nf'
 include { FASTQ_KRAKEN_WF } from './subworkflows/fastq_microbiome.nf'
 include { FASTQ_KRAKEN_AND_BRACKEN_WF } from './subworkflows/fastq_microbiome_wBracken.nf'
-include { BRACKEN_ONLY } from './subworkflows/bracken_only.nf'
 include { FASTQ_QIIME2_WF } from './subworkflows/fastq_16S_qiime2.nf'
 
 // Load BAM subworkflows

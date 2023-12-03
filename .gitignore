@@ -1,0 +1,5 @@
+data/amr/*bt2
+data/kraken_db/
+envs/amrplusplus-update.sif
+logs/
+.nextflow*

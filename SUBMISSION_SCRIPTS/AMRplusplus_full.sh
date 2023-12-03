@@ -28,20 +28,19 @@ module load singularity/3.8.7
 export NXF_OPTS="-Xms500M -Xmx2G"
 
 workdir="/tmp"
-datadir="/mnt/scratch2/GROUP-smbpk"
-installdir="/trinity/home/sbidp3/data/AMRplusplus/"
-resultsdir="/trinity/home/sbidp3/data/AMRplus-all-out/"
-run="AMR_Dec2022"
+installdir="/mnt/data/GROUP-smbpk/sbidp3/AMRplusplus"
+resultsdir="/trinity/home/sbidp3/data/AMRplus-all-out"
+run="AMR_clean_test"
 
-mkdir ${workdir}/${run}/ 
-mkdir ${workdir}/${run}/fastq/ 
-rsync -rv sbidp3@archive.bios.cf.ac.uk:/mnt/archive/GROUP-smbpk/PROJECTS-DATASTORE/AMR/AMR_monitoring/raw_data/${run}/*gz ${workdir}/${run}/fastq/
+#mkdir ${workdir}/${run}/ 
+#mkdir ${workdir}/${run}/fastq/ 
+#rsync -rv sbidp3@archive.bios.cf.ac.uk:/mnt/archive/GROUP-smbpk/PROJECTS-DATASTORE/AMR/AMR_monitoring/raw_data/${run}/*gz ${workdir}/${run}/fastq/
 
 nextflow run ${installdir}/main_AMR++.nf \
 	-w "${workdir}/${run}/work" \
 	-c "${installdir}/config/singularity_slurm.config" \
-	--reads "${datadir}/${run}/fastq/*{R1,R2}.fastq.gz" \
-	--pipeline standard_AMR_wKraken \
+	--reads "${workdir}/${run}/fastq/*{R1,R2}.fastq.gz" \
+	--pipeline standard_AMR_wKraken_and_bracken \
 	--output "${workdir}/${run}/${run}-outputs" \
 	--snp Y \
 	-with-report "${workdir}/${run}/${run}.html" \
@@ -54,10 +53,10 @@ multiqc -o ${workdir}/${run}/${run}-outputs/Results/ ${workdir}/${run}/${run}-ou
 ####
 # Results copyout
 ####
-mkdir ${resultsdir}/${run}
-rsync -r ${workdir}/${run}/${run}-outputs/NonHostFastq $resultsdir/$run/
-rsync -r ${workdir}/${run}/${run}-outputs/Results $resultsdir/$run/
-rsync ${workdir}/${run}/${run}.html $resultsdir/$run/
+#mkdir ${resultsdir}/${run}
+#rsync -r ${workdir}/${run}/${run}-outputs/HostRemoval/NonHostFastq $resultsdir/$run/
+#rsync -r ${workdir}/${run}/${run}-outputs/Results $resultsdir/$run/
+#rsync ${workdir}/${run}/${run}.html $resultsdir/$run/
 
 ## Delete all
-rm -rf ${workdir}/${run}
+#rm -rf ${workdir}/${run}
