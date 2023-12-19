@@ -26,7 +26,7 @@ def helpMessage = """\
         - standard_AMR: Run the standard AMR++ pipeline
         - fast_AMR: Run the fast AMR++ pipeline without host removal.
         - standard_AMR_wKraken: Run the standard AMR++ pipeline with Kraken
-        - standard_AMR_wKraken_and_bracken: Run the standard AMR++ pipeline with Kraken AND Bracken
+        - standard_AMR_wKraken_and_Bracken: Run the standard AMR++ pipeline with Kraken AND Bracken
 
     Available subworkflows:
         - eval_qc: Run FastQC analysis
@@ -87,6 +87,7 @@ include { FASTQ_TRIM_WF } from './subworkflows/fastq_QC_trimming.nf'
 include { FASTQ_ALIGN_WF } from './subworkflows/fastq_align.nf'
 include { FASTQ_RM_HOST_WF } from './subworkflows/fastq_host_removal.nf' 
 include { FASTQ_RESISTOME_WF } from './subworkflows/fastq_resistome.nf'
+include { FASTQ_RESISTOME_WF_BWA } from './subworkflows/fastq_resistome_bwa.nf'
 include { FASTQ_KRAKEN_WF } from './subworkflows/fastq_microbiome.nf'
 include { FASTQ_KRAKEN_AND_BRACKEN_WF } from './subworkflows/fastq_microbiome_wBracken.nf'
 include { FASTQ_QIIME2_WF } from './subworkflows/fastq_16S_qiime2.nf'
@@ -97,8 +98,6 @@ include { BAM_RESISTOME_WF } from './subworkflows/bam_resistome.nf'
 
 taxlevel_ch = Channel.of("D","P","C","O","F","G","S")
 //taxlevel_ch = Channel.from(params.taxlevel.tokenize(','))
-
-taxlevel_ch.view()
 
 workflow {
     if (params.pipeline == null || params.pipeline == "help") {
@@ -153,6 +152,10 @@ workflow {
 
         FASTQ_RESISTOME_WF( fastq_files, params.amr, params.annotation )
     }  
+    else if(params.pipeline == "resistome_BWA") {
+
+        FASTQ_RESISTOME_WF_BWA( fastq_files, params.amr, params.annotation )
+    }  
     else if(params.pipeline == "align") {
 
         FASTQ_ALIGN_WF( fastq_files, params.amr)
@@ -161,7 +164,7 @@ workflow {
 
         FASTQ_KRAKEN_WF( fastq_files , params.kraken_db)
     }
-    else if(params.pipeline == "standard_AMR_wKraken_and_bracken") {
+    else if(params.pipeline == "standard_AMR_wKraken_and_Bracken") {
 
          STANDARD_AMRplusplus_wKrak_and_Brack(fastq_files,params.host, params.amr, params.annotation, params.kraken_db, taxlevel_ch)
     }

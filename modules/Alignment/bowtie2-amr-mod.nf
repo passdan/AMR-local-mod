@@ -17,7 +17,7 @@ deduped = params.deduped
 
 process bowtie2_index {
     tag "Creating bowtie2 index"
-    label "alignment"
+    label "alignmentBowtie2"
 
     errorStrategy { task.exitStatus in 137..140 ? 'retry' : 'terminate' }
     maxRetries 3
@@ -28,18 +28,18 @@ process bowtie2_index {
     path fasta
 
     output: 
-    path("${fasta}*"), emit: bowtie2index, includeInputs: true
+    path("${fasta.simpleName}*"), emit: bowtie2index, includeInputs: true
 
     script:
     """
-    bowtie2-build --threads ${threads} ${fasta} ${fasta} 
+    bowtie2-build --threads ${threads} ${fasta} ${fasta.simpleName}
     """
 }
 
 
 process bowtie2_align {
     tag "$pair_id"
-    label "alignment"
+    label "alignmentBowtie2"
 
     errorStrategy { task.exitStatus in 137..140 ? 'retry' : 'terminate' }
     maxRetries 3
@@ -62,7 +62,7 @@ process bowtie2_align {
     script:
     if( deduped == "N")
         """
-	${BOWTIE2} -x ${indexfiles[0].baseName.takeBefore('.')} -1 ${reads[0]} -2 ${reads[1]} --threads ${threads} --rg-id ${pair_id} --rg SM:${pair_id} > ${pair_id}_alignment.sam
+	${BOWTIE2} -x ${indexfiles[0].simpleName} -1 ${reads[0]} -2 ${reads[1]} --threads ${threads} --rg-id ${pair_id} --rg SM:${pair_id} > ${pair_id}_alignment.sam
 	${SAMTOOLS} view -bS ${pair_id}_alignment.sam | ${SAMTOOLS} sort -@ ${threads} -o ${pair_id}_alignment_sorted.bam
 	rm ${pair_id}_alignment.sam
         """
@@ -88,7 +88,7 @@ process bowtie2_align {
 
 process bowtie2_rm_contaminant_fq {
     tag { pair_id }
-    label "alignment"
+    label "alignmentBowtie2"
 
     errorStrategy { task.exitStatus in 137..140 ? 'retry' : 'terminate' }
     maxRetries 3 
@@ -109,7 +109,7 @@ process bowtie2_rm_contaminant_fq {
     
     """
     
-    ${BOWTIE2} -x ${indexfiles[0].baseName.takeBefore('.')} -1 ${reads[0]} -2 ${reads[1]} --threads ${threads} > ${pair_id}.host.sam
+    ${BOWTIE2} -x ${indexfiles[0].simpleName} -1 ${reads[0]} -2 ${reads[1]} --threads ${threads} > ${pair_id}.host.sam
     ${SAMTOOLS} view -bS ${pair_id}.host.sam | ${SAMTOOLS} sort -@ ${threads} -o ${pair_id}.host.sorted.bam
     rm ${pair_id}.host.sam
     ${SAMTOOLS} index ${pair_id}.host.sorted.bam && ${SAMTOOLS} idxstats ${pair_id}.host.sorted.bam > ${pair_id}.samtools.idxstats
