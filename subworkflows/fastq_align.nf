@@ -1,6 +1,6 @@
 // Load modules
 //include { index ; bwa_align } from '../modules/Alignment/bwa'
-include { bowtie2_index ; bowtie2_align } from '../modules/Alignment/bowtie2-amr-mod'
+include { bowtie2_index ; bowtie2_align } from '../modules/Alignment/bowtie2-for_AMRplusplus'
 
 import java.nio.file.Paths
 

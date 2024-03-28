@@ -2,8 +2,8 @@
 //include { index } from '../modules/Alignment/bwa'
 //include { bwa_align ; bwa_rm_contaminant_fq ; HostRemovalStats} from '../modules/Alignment/bwa'
 
-include { bowtie2_index } from '../modules/Alignment/bowtie2-amr-mod'
-include { bowtie2_align ; bowtie2_rm_contaminant_fq ; HostRemovalStats} from '../modules/Alignment/bowtie2-amr-mod'
+include { bowtie2_index } from '../modules/Alignment/bowtie2-for_AMRplusplus'
+include { bowtie2_align ; bowtie2_rm_contaminant_fq ; HostRemovalStats} from '../modules/Alignment/bowtie2-for_AMRplusplus'
 
 import java.nio.file.Paths
 
