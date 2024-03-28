@@ -29,23 +29,23 @@ Codebase is provided as-is and is hyper-locally modified for our infrastructure.
 
 ## Edit Slurm submission scripts
 4. An example slurm script defines these parameters:
-  1. workdir:     Location where processing will be performed (advice: use high speed location on your processing node i.e. /tmp)
-  2. installdir:  Location of this github repo on your system
-  3. resultsdir:  Where do you want the main outputs to be transfered to (not the full working folders & outputs)
-  4. run:         Name of the run for annotation and folder where the fastq files are
+   -  workdir:     Location where processing will be performed (advice: use high speed location on your processing node i.e. /tmp)
+   - installdir:  Location of this github repo on your system
+   - resultsdir:  Where do you want the main outputs to be transfered to (not the full working folders & outputs)
+   - run:         Name of the run for annotation and folder where the fastq files are
                   Default input read location is: `$workdir/$run/fastq`
 ---
 
 # Running the pipeline
 
-Default pipeline is `standard_AMR_wKraken_and_bracken` which will run from raw fastqs to the endpoint. 
+Default pipeline is `standard_AMR_wKraken_and_bracken` which will run from raw fastqs to the endpoint. Alternatives are to use mid-process data, kraken only etc. by modifying the --pipeline parameter
 
     Available pipelines:
         - demo: Run a demonstration of AMR++
         - standard_AMR: Run the standard AMR++ pipeline
         - fast_AMR: Run the fast AMR++ pipeline without host removal.
         - standard_AMR_wKraken: Run the standard AMR++ pipeline with Kraken
-**NEW** - standard_AMR_wKraken_and_bracken: Run the standard AMR++ pipeline with Kraken AND Bracken
+        - **NEW** standard_AMR_wKraken_and_bracken: Run the standard AMR++ pipeline with Kraken AND Bracken
 
     Available subworkflows:
         - eval_qc: Run FastQC analysis
@@ -54,14 +54,13 @@ Default pipeline is `standard_AMR_wKraken_and_bracken` which will run from raw f
         - resistome: Perform resistome analysis
         - align: Perform alignment to MEGARes database
         - kraken: Perform Kraken analysis
-**NEW** - kraken_and_bracken: Perform Kraken and Bracken analysis
+        - **NEW** kraken_and_bracken: Perform Kraken and Bracken analysis
         - qiime2: Perform QIIME 2 analysis
         - bam_resistome: Perform resistome analysis on BAM files
-
-
-Alternatives are to use mid-process data, kraken only etc. by modifying the --pipeline parameter
 
 Submit as a slurm & singularity job with:
 ```
 sbatch AMRplusplus_full.sh
 ```
+
+You're finished!
