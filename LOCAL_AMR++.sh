@@ -1,21 +1,19 @@
 #!/bin/bash
 
-workdir="/home/jupyter/workspace/rawdata/"
-installdir="/home/jupyter/repos/AMR-local-mod"
-resultsdir="AMRplusplus-selected-outputs"
 run="S358_MiSeq_BHWNTNDRX5"
 
+export NXF_SINGULARITY_CACHEDIR=/home/dataproc/singularities
 
-nextflow run ${installdir}/main_AMR++.nf \
-	-w "${workdir}/${run}/work" \
-	-c "${installdir}/config/singularity.config" \
-	--reads "${workdir}/${run}/fastq/*{R1,R2}_001.fastq.gz" \
+wb nextflow run main_AMR++.nf \
+	-profile singularity \
+        -c /home/dataproc/repos/configs/conf/google.config \
+	--reads "gs://rawdata-wb-farms/${run}/fastq/C*{R1,R2}.fastq.gz" \
 	--pipeline standard_AMR_wKraken_and_Bracken \
-	--output "${workdir}/${run}/${run}-outputs" \
+	--output "gs://dataproc-temp-wb-mighty-tangerine-1678/${run}-outputs" \
 	--snp Y \
-	-with-report "${workdir}/${run}/${run}.html" \
-	-with-trace "${installdir}/logs/${SLURM_JOB_ID}.trace.txt" \
-        -resume	
+	-with-report "${run}.html" \
+	-with-trace "${run}.trace.txt" 
+	-resume
 
 #singularity exec docker://multiqc/multiqc:latest multiqc -o ${workdir}/${run}/${run}-outputs/Results/ ${workdir}/${run}/${run}-outputs
 
