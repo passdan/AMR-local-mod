@@ -24,6 +24,7 @@ def helpMessage = """\
     Available pipelines:
         - demo: Run a demonstration of AMR++
         - standard_AMR: Run the standard AMR++ pipeline
+	- preprocess: Just the steps from QC, trim, and host removal. 
         - fast_AMR: Run the fast AMR++ pipeline without host removal.
         - standard_AMR_wKraken: Run the standard AMR++ pipeline with Kraken
         - standard_AMR_wKraken_and_Bracken: Run the standard AMR++ pipeline with Kraken AND Bracken
@@ -79,6 +80,7 @@ params.pipeline = null
 include { STANDARD_AMRplusplus } from './subworkflows/AMR++_standard.nf' 
 include { FAST_AMRplusplus } from './subworkflows/AMR++_fast.nf'
 include { STANDARD_AMRplusplus_wKraken } from './subworkflows/AMR++_standard_wKraken.nf'
+include { STANDARD_preprocess } from './subworkflows/AMR++_standard_preprocess.nf'
 include { STANDARD_AMRplusplus_wKrak_and_Brack } from './subworkflows/AMR++_standard_wKrak_and_Brack.nf'
 
 // Load subworkflows
@@ -126,6 +128,11 @@ workflow {
     else if(params.pipeline == "standard_AMR") {
 
         STANDARD_AMRplusplus(fastq_files,params.host, params.amr, params.annotation)
+        
+    }
+    else if(params.pipeline == "preprocess") {
+
+        STANDARD_preprocess(fastq_files,params.host)
         
     } 
     else if(params.pipeline == "fast_AMR") {

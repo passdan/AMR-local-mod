@@ -2,18 +2,17 @@
 
 run="S358_MiSeq_BHWNTNDRX5"
 
-export NXF_SINGULARITY_CACHEDIR=/home/dataproc/singularities
+export NXF_SINGULARITY_CACHEDIR="gs://rawdata-wb-farms/singularities"
+
 
 wb nextflow run main_AMR++.nf \
-	-profile singularity \
-        -c /home/dataproc/repos/configs/conf/google.config \
+	-profile gls \
 	--reads "gs://rawdata-wb-farms/${run}/fastq/C*{R1,R2}.fastq.gz" \
-	--pipeline standard_AMR_wKraken_and_Bracken \
-	--output "gs://dataproc-temp-wb-mighty-tangerine-1678/${run}-outputs" \
+	--pipeline preprocess \
+	--output "gs://rawdata-wb-farms/${run}-outputs" \
 	--snp Y \
 	-with-report "${run}.html" \
 	-with-trace "${run}.trace.txt" 
-	-resume
 
 #singularity exec docker://multiqc/multiqc:latest multiqc -o ${workdir}/${run}/${run}-outputs/Results/ ${workdir}/${run}/${run}-outputs
 
