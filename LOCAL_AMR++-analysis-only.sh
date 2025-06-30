@@ -8,12 +8,12 @@ export NXF_SINGULARITY_CACHEDIR="singularities"
 nextflow run main_AMR++.nf \
 	-profile singularity \
 	-work-dir "/mnt/data/work" \
-	--reads "/home/ubuntu/fastq/C4*{R1,R2}.fastq.gz" \
-	--pipeline "standard_AMR_wKraken_and_Bracken" \
-	--output "/mnt/data/coutputs" \
+	--clean_reads "/mnt/data/NonHost/*{R1,R2}.fastq.gz" \
+	--pipeline "clean_reads_wKrak_and_Brack" \
+	--output "/mnt/data/analysis-outputs" \
 	--snp N \
-	-with-report "${run}-temp.html" \
-	-with-trace "${run}-temp.trace.txt" \
+	-with-report "${run}-analysis.html" \
+	-with-trace "${run}-analysis.trace.txt" \
         -resume	
 
 

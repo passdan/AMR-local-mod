@@ -82,6 +82,8 @@ include { FAST_AMRplusplus } from './subworkflows/AMR++_fast.nf'
 include { STANDARD_AMRplusplus_wKraken } from './subworkflows/AMR++_standard_wKraken.nf'
 include { STANDARD_preprocess } from './subworkflows/AMR++_standard_preprocess.nf'
 include { STANDARD_AMRplusplus_wKrak_and_Brack } from './subworkflows/AMR++_standard_wKrak_and_Brack.nf'
+include { clean_reads_wKrak_and_Brack } from './subworkflows/AMR++_clean_reads_krakbrack.nf'
+
 
 // Load subworkflows
 include { FASTQ_QC_WF } from './subworkflows/fastq_information.nf'
@@ -93,7 +95,6 @@ include { FASTQ_RESISTOME_WF_BWA } from './subworkflows/fastq_resistome_bwa.nf'
 include { FASTQ_KRAKEN_WF } from './subworkflows/fastq_microbiome.nf'
 include { FASTQ_KRAKEN_AND_BRACKEN_WF } from './subworkflows/fastq_microbiome_wBracken.nf'
 include { FASTQ_QIIME2_WF } from './subworkflows/fastq_16S_qiime2.nf'
-
 // Load BAM subworkflows
 include { BAM_RESISTOME_WF } from './subworkflows/bam_resistome.nf'
 
@@ -128,12 +129,10 @@ workflow {
     else if(params.pipeline == "standard_AMR") {
 
         STANDARD_AMRplusplus(fastq_files,params.host, params.amr, params.annotation)
-        
     }
     else if(params.pipeline == "preprocess") {
 
         STANDARD_preprocess(fastq_files,params.host)
-        
     } 
     else if(params.pipeline == "fast_AMR") {
 
@@ -179,6 +178,22 @@ workflow {
 
          FASTQ_KRAKEN_AND_BRACKEN_WF(fastq_files, params.kraken_db, taxlevel_ch)
     }
+
+    else if(params.pipeline == "clean_reads_wKrak_and_Brack") {
+
+
+	Channel
+    		.fromFilePairs( params.clean_reads , size: (params.reads =~ /\{/) ? 2 : 1)
+    		.ifEmpty { error "Cannot find any reads matching: ${params.clean_reads}" }
+    		.map { id, files -> 
+        		def modified_baseName = id.split('\\.')[0]
+        		tuple(modified_baseName, files)
+    		}
+    		.set {clean_reads}
+
+         clean_reads_wKrak_and_Brack(clean_reads, params.amr, params.annotation, params.kraken_db, taxlevel_ch)
+    }
+
     else if(params.pipeline == "qiime2") {
         Channel
             .fromFilePairs( params.reads, flat: true )
